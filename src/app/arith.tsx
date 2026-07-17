@@ -1,6 +1,6 @@
-import { Link } from "expo-router";
 import { useState } from "react";
 import {
+    Alert,
     SafeAreaView,
     StyleSheet,
     Text,
@@ -14,16 +14,34 @@ const Arith = () => {
     const [num2, setNum2] = useState("10");
     const [result, setResult] = useState(0);
 
-    const handleAdd = () => {
+    const getValues = () => {
         const a = parseFloat(num1) || 0;
         const b = parseFloat(num2) || 0;
+        return { a, b };
+    };
+
+    const handleAdd = () => {
+        const { a, b } = getValues();
         setResult(a + b);
     };
 
     const handleSub = () => {
-        const a = parseFloat(num1) || 0;
-        const b = parseFloat(num2) || 0;
+        const { a, b } = getValues();
         setResult(a - b);
+    };
+
+    const handleMul = () => {
+        const { a, b } = getValues();
+        setResult(a * b);
+    };
+
+    const handleDiv = () => {
+        const { a, b } = getValues();
+        if (b === 0) {
+            Alert.alert("Error", "หารด้วย 0 ไม่ได้");
+            return;
+        }
+        setResult(a / b);
     };
 
     const handleReset = () => {
@@ -35,10 +53,10 @@ const Arith = () => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
-                <Text style={styles.title}>arith</Text>
+                <Text style={styles.title}>Arith</Text>
 
                 <View style={styles.resultBox}>
-                    <Text style={styles.resultLabel}>Result:</Text>
+                    <Text style={styles.resultLabel}>Result</Text>
                     <Text style={styles.resultValue}>{result}</Text>
                 </View>
 
@@ -58,31 +76,24 @@ const Arith = () => {
                     placeholder="Number 2"
                 />
 
-                <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.button} onPress={handleAdd}>
+                <View style={styles.buttonGrid}>
+                    <TouchableOpacity style={[styles.button, styles.addButton]} onPress={handleAdd}>
                         <Text style={styles.buttonLabel}>ADD</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={handleSub}>
+                    <TouchableOpacity style={[styles.button, styles.subButton]} onPress={handleSub}>
                         <Text style={styles.buttonLabel}>SUB</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={handleReset}>
-                        <Text style={styles.buttonLabel}>RESET</Text>
+                    <TouchableOpacity style={[styles.button, styles.mulButton]} onPress={handleMul}>
+                        <Text style={styles.buttonLabel}>MUL</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, styles.divButton]} onPress={handleDiv}>
+                        <Text style={styles.buttonLabel}>DIV</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* แถบนำทางไปหน้าอื่น */}
-                <View style={styles.navRow}>
-                    <Link href="/" asChild>
-                        <TouchableOpacity style={styles.navButton}>
-                            <Text style={styles.navButtonText}>Index</Text>
-                        </TouchableOpacity>
-                    </Link>
-                    <Link href="/form" asChild>
-                        <TouchableOpacity style={styles.navButton}>
-                            <Text style={styles.navButtonText}>Form</Text>
-                        </TouchableOpacity>
-                    </Link>
-                </View>
+                <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
+                    <Text style={styles.resetLabel}>RESET</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
@@ -99,33 +110,33 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     title: {
-        fontSize: 18,
-        fontWeight: "400",
+        fontSize: 20,
+        fontWeight: "700",
         color: "#000",
         marginBottom: 16,
     },
     resultBox: {
         backgroundColor: "#5fa5e7",
-        borderRadius: 10,
+        borderRadius: 12,
         paddingVertical: 20,
         paddingHorizontal: 16,
         alignItems: "center",
         marginBottom: 20,
     },
     resultLabel: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#000",
-        marginBottom: 8,
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#eaf3fc",
+        marginBottom: 4,
     },
     resultValue: {
-        fontSize: 16,
+        fontSize: 36,
+        fontWeight: "bold",
         color: "#000",
-        alignSelf: "flex-start",
     },
     input: {
         backgroundColor: "#f2f2f2",
-        borderRadius: 6,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: "#e0e0e0",
         paddingVertical: 12,
@@ -133,43 +144,50 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 12,
     },
-    buttonRow: {
+    buttonGrid: {
         flexDirection: "row",
+        flexWrap: "wrap",
         backgroundColor: "#e2e2e2",
-        borderRadius: 10,
+        borderRadius: 12,
         padding: 12,
         justifyContent: "space-between",
         marginTop: 8,
+        gap: 10,
     },
     button: {
-        flex: 1,
-        backgroundColor: "#00af4f",
-        paddingVertical: 12,
-        borderRadius: 6,
-        marginHorizontal: 4,
+        width: "47%",
+        paddingVertical: 14,
+        borderRadius: 8,
         alignItems: "center",
+    },
+    addButton: {
+        backgroundColor: "#00af4f",
+    },
+    subButton: {
+        backgroundColor: "#e67e22",
+    },
+    mulButton: {
+        backgroundColor: "#2f95dc",
+    },
+    divButton: {
+        backgroundColor: "#9b59b6",
     },
     buttonLabel: {
         color: "#fff",
         fontSize: 14,
-        fontWeight: "600",
+        fontWeight: "700",
     },
-    navRow: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 24,
-        gap: 12,
-    },
-    navButton: {
-        backgroundColor: "#2f95dc",
+    resetButton: {
+        backgroundColor: "#e2e2e2",
         paddingVertical: 10,
-        paddingHorizontal: 20,
         borderRadius: 8,
+        alignItems: "center",
+        marginTop: 16,
     },
-    navButtonText: {
-        color: "#fff",
-        fontSize: 15,
-        fontWeight: "600",
+    resetLabel: {
+        color: "#555",
+        fontSize: 14,
+        fontWeight: "700",
     },
 });
 

@@ -1,11 +1,10 @@
-import { Link } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown'; // npm install react-native-element-dropdown --save
 import { PaperProvider, RadioButton } from 'react-native-paper'; // npm install react-native-paper --save
 import { SafeAreaView } from "react-native-safe-area-context"; // npm install react-native-safe-area-context --save
 
-export default function Form() {
+export default function CedForm() {
     const depts = [
         { label: 'Please Select Department', value: '', index: 0 },
         { label: 'Civil Engineering', value: 'CE', index: 1 },
@@ -30,16 +29,18 @@ export default function Form() {
                     contentContainerStyle={{ paddingBottom: 40 }}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <ScrollView style={styles.display}>
-                        <Text>Name: {data.name} </Text>
-                        <Text>Gender: {data.gender}</Text>
-                        <Text>Dept: {data.dept}</Text>
-                        <Text>Comment: {data.comment}</Text>
-                        <Text>Agree: {data.isAgree ? 'Yes' : 'No'}</Text>
-                    </ScrollView>
+                    <Text style={styles.title}>CED_Form</Text>
 
-                    <View style={{ paddingVertical: 20 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Name: </Text>
+                    <View style={styles.display}>
+                        <Text style={styles.displayText}>Name: {data.name} </Text>
+                        <Text style={styles.displayText}>Gender: {data.gender}</Text>
+                        <Text style={styles.displayText}>Dept: {data.dept}</Text>
+                        <Text style={styles.displayText}>Comment: {data.comment}</Text>
+                        <Text style={styles.displayText}>Agree: {data.isAgree ? 'Yes' : 'No'}</Text>
+                    </View>
+
+                    <View style={styles.section}>
+                        <Text style={styles.label}>Name: </Text>
                         <TextInput
                             style={styles.input}
                             value={data.name}
@@ -48,23 +49,25 @@ export default function Form() {
                         />
                     </View>
 
-                    <RadioButton.Group
-                        value={data.gender}
-                        onValueChange={value => setData({ ...data, gender: value })}
-                    >
-                        <Text style={{ fontWeight: 'bold' }}>Gender: </Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <RadioButton value="Male" />
-                            <Text>Male</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <RadioButton value="Female" />
-                            <Text>Female</Text>
-                        </View>
-                    </RadioButton.Group>
+                    <View style={styles.section}>
+                        <RadioButton.Group
+                            value={data.gender}
+                            onValueChange={value => setData({ ...data, gender: value })}
+                        >
+                            <Text style={styles.label}>Gender: </Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <RadioButton value="Male" />
+                                <Text>Male</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <RadioButton value="Female" />
+                                <Text>Female</Text>
+                            </View>
+                        </RadioButton.Group>
+                    </View>
 
-                    <View style={{ paddingVertical: 20 }}>
-                        <Text style={{ fontWeight: 'bold', paddingBottom: 10 }}>Department: </Text>
+                    <View style={styles.section}>
+                        <Text style={styles.label}>Department: </Text>
                         <Dropdown
                             style={styles.dropdown}
                             placeholderStyle={styles.placeholderStyle}
@@ -79,8 +82,8 @@ export default function Form() {
                         />
                     </View>
 
-                    <View>
-                        <Text style={{ fontWeight: 'bold', paddingBottom: 10 }}>Comment: </Text>
+                    <View style={styles.section}>
+                        <Text style={styles.label}>Comment: </Text>
                         <TextInput
                             style={styles.comment}
                             multiline
@@ -91,27 +94,13 @@ export default function Form() {
                     </View>
 
                     <View style={styles.switch_container}>
-                        <Text>Do you agree?</Text>
+                        <Text style={styles.label}>Do you agree?</Text>
                         <Switch
                             trackColor={{ true: '#47F', false: 'grey' }}
                             thumbColor='pink'
                             value={data.isAgree}
                             onValueChange={(value) => setData({ ...data, isAgree: value })}
                         />
-                    </View>
-
-                    {/* แถบนำทางไปหน้าอื่น */}
-                    <View style={styles.navRow}>
-                        <Link href="/" asChild>
-                            <TouchableOpacity style={styles.navButton}>
-                                <Text style={styles.navButtonText}>Index</Text>
-                            </TouchableOpacity>
-                        </Link>
-                        <Link href="/arith" asChild>
-                            <TouchableOpacity style={styles.navButton}>
-                                <Text style={styles.navButtonText}>Arith</Text>
-                            </TouchableOpacity>
-                        </Link>
                     </View>
                 </ScrollView>
             </SafeAreaView>
@@ -125,39 +114,56 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5F5F5',
         padding: 5,
     },
+    title: {
+        fontSize: 20,
+        fontWeight: '700',
+        marginTop: 12,
+        marginBottom: 16,
+    },
+    section: {
+        marginBottom: 18,
+    },
+    label: {
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
     input: {
         height: 50,
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 8,
         backgroundColor: 'white',
     },
     display: {
-        height: 120,
-        padding: 10,
-        backgroundColor: 'pink',
-        paddingHorizontal: 20,
+        padding: 14,
+        backgroundColor: '#ffd9e6',
+        borderRadius: 10,
+        marginBottom: 20,
+    },
+    displayText: {
+        fontSize: 13,
+        marginBottom: 2,
     },
     comment: {
         height: 80,
         borderWidth: 1,
         borderColor: '#ccc',
-        marginBottom: 15,
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 8,
         backgroundColor: 'white',
     },
     switch_container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 20,
+        alignItems: 'center',
+        paddingVertical: 12,
     },
     dropdown: {
         height: 50,
         borderWidth: 1,
         borderColor: '#ccc',
-        borderRadius: 5,
+        borderRadius: 8,
         paddingHorizontal: 12,
         backgroundColor: 'white',
     },
@@ -168,22 +174,5 @@ const styles = StyleSheet.create({
     selectedTextStyle: {
         fontSize: 14,
         color: '#000',
-    },
-    navRow: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 10,
-        gap: 12,
-    },
-    navButton: {
-        backgroundColor: '#2f95dc',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-    },
-    navButtonText: {
-        color: '#fff',
-        fontSize: 15,
-        fontWeight: '600',
     },
 })
